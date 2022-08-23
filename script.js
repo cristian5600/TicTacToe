@@ -31,12 +31,10 @@ const gameBoard =( ()=>{
                 else if (value === `O`){
                     x.classList.add(`circle`)}
                     gamestate[position] = -1;
-            }
-            
+            }   
         }
     }
     const remove = ()=>{
-
         removeAllChildNodes(document.getElementsByClassName(`content`)[0]);
         gamestate = [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0];
         
@@ -73,7 +71,8 @@ const player = (NAME,PICK) =>{
 const play = ( ()=>{
     const player1 = player(`player1`,`X`);
     const player2 = player(`player2`,`O`);
-
+    const tripleX = [ 1, 1, 1];
+    const tripleO = [ -1, -1, -1];
     const pick = (player1,player2)=>{
 
     }
@@ -81,9 +80,32 @@ const play = ( ()=>{
     const switchPlayer = ()=>{
 
     }
-    const checkBoard = (roundNr)=>{ //for win or draw
-        console.log(roundNr);
+    const checkBoard = ()=>{ //for win or draw
+       console.log( gameBoard.gamestate.slice(0,3) );
+       for(let i = 0;i < 3 ; i++)
+            switch(gameBoard.gamestate.slice(i,3+i*3)){  ///checking rows
+                case tripleX:
+                    return 1;
+                    
+                case tripleO:
+                    return -1;           
+       }
+
+       for(let i = 0;i < 3 ; i++){
+            let column = [ gameBoard.gamestate[i], gameBoard.gamestate[i + 3] ,gameBoard.gamestate[i + 6]];
+            console.log({row,tripleO,tripleX});
+            switch(column){  ///checking columns
+                case tripleX:
+                    console.log(`FOUND IT`);
+                    return 1;
+                    
+                case tripleO:
+                    return -1;           
+            }
+        }
     }
+
+
     return {pick,switchPlayer,checkBoard};
 })();
 
