@@ -1,1 +1,1 @@
-# TicTacToe
+This is just a simple tictactoe game mage with html, css and javascript.
