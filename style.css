@@ -5,13 +5,12 @@ html , body{
 body{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-content: center;
 }
 .content{
-    height:100%;
+    height:fit-content;
     width:100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,6 +24,7 @@ body{
     gap:0px;
     justify-content: center;
     align-items: center;  
+    border-style: solid;
 }
 .box {
     height: 120px;
@@ -40,10 +40,12 @@ body{
     height:100%;
     width:100%;
     content:  'O'; 
-  color: rgb(154, 113, 113);
+  color: rgb(231 76 60);
   font-size: 80px;
   font-weight: 300;
   font-family: Arial, sans-serif;
+  position:relative;
+  top:9px;
 
 }
 .cross::before {
@@ -51,10 +53,12 @@ body{
     height:100%;
     width:100%;
     content:  'X'; 
-  color: rgb(154, 113, 113);
+  color: rgb(231 76 60);
   font-size: 80px;
   font-weight: 300;
   font-family: Arial, sans-serif;
+  position:relative;
+  top:9px;
 
 }
 
@@ -62,12 +66,56 @@ body{
     display: flex;
     justify-content: center;
     font-size: 30px;
-    height:40px;
+    height:fit-content;
     width:100%;
     align-content: center;
 }
-.reset{
-    font-size: 50px;
-    height: 80px;
-    width: 300px;
+.reset {
+    padding: 1em 2.1em 1.1em;
+    border-radius: 3px;
+    margin: 8px 8px 8px 8px;
+    color: #fbdedb;
+    background-color: #fbdedb;
+    display: inline-block;
+    background: #e74c3c;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+    font-family: sans-serif;
+    font-weight: 800;
+    font-size: .85em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    -webkit-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    position: relative;
 }
+.reset:hover, .reset:focus {
+    opacity: 0.8;
+}
+.reset:active {
+    -webkit-transform: scale(0.80);
+    -moz-transform: scale(0.80);
+    -ms-transform: scale(0.80);
+    -o-transform: scale(0.80);
+    transform: scale(0.80);
+}
+.reset.block {
+    display: block !important;
+}
+.reset.circular {
+  border-radius: 50em !important;
+}
+th, td {
+    padding: 15px;
+    text-align: center;
+
+  }
+  th, td, table{
+    border:1px solid;
+
+  }
+  

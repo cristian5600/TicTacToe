@@ -61,6 +61,8 @@ const player = (NAME,PICK) =>{
 }
 const play = ( ()=>{
     const boxes = document.getElementsByClassName(`box`);
+    const SCORE1 = document.getElementsByClassName(`score1`);
+    const SCORE2 = document.getElementsByClassName(`score2`);
     const player1 = player(`player1`,`X`);
     const player2 = player(`player2`,`O`);
     const tripleX = [ 1, 1, 1];
@@ -90,20 +92,30 @@ const play = ( ()=>{
     }
     const activate = (e) =>{
         //console.log(e.path[0].dataset.position);
-        gameBoard.draw(pick(),e.path[0].dataset.position);
+        if(e.path[0].classList.contains(`cross`) === false && e.path[0].classList.contains(`circle`) === false)
+            gameBoard.draw(pick(),e.path[0].dataset.position);
+        else return;
         if(checkBoard() === 1){
             setTimeout(myAlert1,200);
-            gameBoard.clean();
+            stopGame();
+            
+            //gameBoard.clean();
             logicCount = 0;
+            score1++;
+            SCORE1[0].textContent = `${score1}`
         }
         else if (checkBoard() === -1){
             setTimeout(myAlert2,200);
-            gameBoard.clean();
+            stopGame();
+            score2++;
+            //gameBoard.clean();
             logicCount = 0;
+            SCORE2[0].textContent = `${score2}`
         }
         else if(checkBoard() === `draw`){
             setTimeout(myAlert0,200);
-            gameBoard.clean();
+            stopGame();
+            //gameBoard.clean();
             logicCount = 0;
         }
         //stopInput();
@@ -126,9 +138,9 @@ const play = ( ()=>{
        // console.log( gameBoard.gamestate );
        console.log(gameBoard.gamestate);
        for(let i = 0;i < 3 ; i++){  ///checking rows
-            if( arrayEquals(gameBoard.gamestate.slice(i,3+i*3),tripleX) )
+            if      ( arrayEquals(gameBoard.gamestate.slice(i*3,3+i*3),tripleX) )
                 return 1;
-            else if ( arrayEquals(gameBoard.gamestate.slice(i,3+i*3),tripleO) )
+            else if ( arrayEquals(gameBoard.gamestate.slice(i*3,3+i*3),tripleO) )
                 return -1;
         }
        for(let i = 0;i < 3 ; i++){ // checking columns
@@ -138,9 +150,14 @@ const play = ( ()=>{
             else if ( arrayEquals(column,tripleO) )
                 return -1;
         }
-        if( gameBoard.gamestate[0] === 1 && gameBoard.gamestate[4]===1 && gameBoard.gamestate[8] === 1)
+        ///checking cross sections
+        if( gameBoard.gamestate[0] === 1 && gameBoard.gamestate[4]===1 && gameBoard.gamestate[8] === 1) 
             return 1;
-        else if (gameBoard.gamestate[0] === -1 && gameBoard.gamestate[4]===-1 && gameBoard.gamestate[8]===-1)
+        if (gameBoard.gamestate[0] === -1 && gameBoard.gamestate[4]===-1 && gameBoard.gamestate[8]===-1)
+            return -1;
+        if( gameBoard.gamestate[2] === 1 && gameBoard.gamestate[4]===1 && gameBoard.gamestate[6] === 1)
+            return 1;
+        if (gameBoard.gamestate[2] === -1 && gameBoard.gamestate[4]===-1 && gameBoard.gamestate[6]===-1)
             return -1;
         if(logicCount === 9)
             return `draw`;
@@ -170,3 +187,6 @@ function arrayEquals(a, b) {
       a.length === b.length &&
       a.every((val, index) => val === b[index]);
   }
+gameBoard.createBoard();
+play.startGame();
+play.reset();
