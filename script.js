@@ -19,94 +19,144 @@ const gameBoard =( ()=>{
         }
     }
     const draw = (value,position) =>{
-        let squares = document.getElementsByClassName(`box`); //('[data-id="box1"]')
-        console.log(squares);
+        let squares = document.getElementsByClassName(`box`); //('[data-id="box1"]')       
         for(x of squares){
-            //console.log(x.dataset.position);
             if(x.dataset.position === `${position}`){
                 if(value === `X`){
                     x.classList.add(`cross`);
                     gamestate[position] = 1;
                 }
                 else if (value === `O`){
-                    x.classList.add(`circle`)}
+                    x.classList.add(`circle`)
                     gamestate[position] = -1;
             }   
+            }
         }
     }
     const remove = ()=>{
         removeAllChildNodes(document.getElementsByClassName(`content`)[0]);
-        gamestate = [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0];
+        
         
     }
     const clean = () =>{
         remove();
         createBoard();
+        for(let i =0; i < gameBoard.gamestate.length ; i++){
+            gameBoard.gamestate[i] = 0;
+        }
     }
     return {gamestate,print,createBoard,draw,clean};
 })();
 const player = (NAME,PICK) =>{
     let name = NAME;
     let pick = PICK;
-    let score = 0;
-    const boxes = document.getElementsByClassName(`box`);
-    const activate = (e)=>{
-        console.log(e.path[0].dataset.position);
-        gameBoard.draw(pick,e.path[0].dataset.position);
-        stopInput();
+    let currentState = `inactive`;
+    
+    
+    const getState = () => {
+        return currentState;
     }
-
-    const startInput = ()=> {
-        for(box of boxes){
-            box.addEventListener(`click`, activate)
-        }
-    }
-    const stopInput = () => {
-        for(box of boxes)
-            box.removeEventListener(`click`, activate)
-    }
-    return {name,pick,score,startInput,stopInput}
+    return {name,pick,getState,currentState}
     
 }
 const play = ( ()=>{
+    const boxes = document.getElementsByClassName(`box`);
     const player1 = player(`player1`,`X`);
     const player2 = player(`player2`,`O`);
     const tripleX = [ 1, 1, 1];
     const tripleO = [ -1, -1, -1];
-    const pick = (player1,player2)=>{
+    let logicCount = 0 ;
+    let score1 = 0;
+    let score2 = 0;
+    const pick = () => {
+        if(logicCount % 2 === 0){
+            logicCount++;
+            return `X`;
+        }
+        else {
+            logicCount++;
+            return `O`;
+        }
 
     }
-
-    const switchPlayer = ()=>{
-
+    const myAlert1 = ()=> {
+        setTimeout(alert(`Player1 has won!`),200);
     }
-    const checkBoard = ()=>{ //for win or draw
-       console.log( gameBoard.gamestate.slice(0,3) );
-       for(let i = 0;i < 3 ; i++)
-            switch(gameBoard.gamestate.slice(i,3+i*3)){  ///checking rows
-                case tripleX:
-                    return 1;
-                    
-                case tripleO:
-                    return -1;           
-       }
+    const myAlert2 = () => {
+        setTimeout(alert(`Player2 has won!`),200);
+    }
+    const myAlert0 = () => {
+        setTimeout(alert(`Draw!`),200);
+    }
+    const activate = (e) =>{
+        //console.log(e.path[0].dataset.position);
+        gameBoard.draw(pick(),e.path[0].dataset.position);
+        if(checkBoard() === 1){
+            setTimeout(myAlert1,200);
+            gameBoard.clean();
+            logicCount = 0;
+        }
+        else if (checkBoard() === -1){
+            setTimeout(myAlert2,200);
+            gameBoard.clean();
+            logicCount = 0;
+        }
+        else if(checkBoard() === `draw`){
+            setTimeout(myAlert0,200);
+            gameBoard.clean();
+            logicCount = 0;
+        }
+        //stopInput();
+    }
 
-       for(let i = 0;i < 3 ; i++){
-            let column = [ gameBoard.gamestate[i], gameBoard.gamestate[i + 3] ,gameBoard.gamestate[i + 6]];
-            console.log({row,tripleO,tripleX});
-            switch(column){  ///checking columns
-                case tripleX:
-                    console.log(`FOUND IT`);
-                    return 1;
-                    
-                case tripleO:
-                    return -1;           
-            }
+    const startGame = () => {
+        
+        for(box of boxes){
+            box.addEventListener(`click`, activate)
         }
     }
+    const stopGame = () => {
+        //currentState = `inactive`;
+        for(box of boxes)
+            box.removeEventListener(`click`, activate);
+        
+    }
 
+    const checkBoard = ()=>{ //for win or draw
+       // console.log( gameBoard.gamestate );
+       console.log(gameBoard.gamestate);
+       for(let i = 0;i < 3 ; i++){  ///checking rows
+            if( arrayEquals(gameBoard.gamestate.slice(i,3+i*3),tripleX) )
+                return 1;
+            else if ( arrayEquals(gameBoard.gamestate.slice(i,3+i*3),tripleO) )
+                return -1;
+        }
+       for(let i = 0;i < 3 ; i++){ // checking columns
+            let column = [ gameBoard.gamestate[i], gameBoard.gamestate[i + 3] ,gameBoard.gamestate[i + 6]];
+            if( arrayEquals(column,tripleX) )
+                return 1;
+            else if ( arrayEquals(column,tripleO) )
+                return -1;
+        }
+        if( gameBoard.gamestate[0] === 1 && gameBoard.gamestate[4]===1 && gameBoard.gamestate[8] === 1)
+            return 1;
+        else if (gameBoard.gamestate[0] === -1 && gameBoard.gamestate[4]===-1 && gameBoard.gamestate[8]===-1)
+            return -1;
+        if(logicCount === 9)
+            return `draw`;
+        return 0;
+    }
+    const reset  =   ()=>{
+        buton = document.getElementsByClassName(`reset`);
+        buton[0].addEventListener(`click`, resetGame);
+    }
 
-    return {pick,switchPlayer,checkBoard};
+    const resetGame = ()=>{
+        gameBoard.clean();
+        startGame();
+        
+    }
+    return {pick,checkBoard,startGame,reset};
 })();
 
 function removeAllChildNodes(parent) {
@@ -114,3 +164,9 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+function arrayEquals(a, b) {
+    return Array.isArray(a) &&
+      Array.isArray(b) &&
+      a.length === b.length &&
+      a.every((val, index) => val === b[index]);
+  }
