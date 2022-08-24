@@ -1,9 +1,7 @@
-const gameBoard =( ()=>{
+const gameBoard =( ()=>{   
     let gamestate = [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0];
     const CONTENT = document.getElementsByClassName(`content`);
 
-
-    // mmethods 
     const print = ()=>{
         console.log(gamestate);
     }
@@ -63,8 +61,8 @@ const play = ( ()=>{
     const boxes = document.getElementsByClassName(`box`);
     const SCORE1 = document.getElementsByClassName(`score1`);
     const SCORE2 = document.getElementsByClassName(`score2`);
-    const player1 = player(`player1`,`X`);
-    const player2 = player(`player2`,`O`);
+    //const player1 = player(`player1`,`X`);
+    //const player2 = player(`player2`,`O`);
     const tripleX = [ 1, 1, 1];
     const tripleO = [ -1, -1, -1];
     let logicCount = 0 ;
@@ -91,15 +89,12 @@ const play = ( ()=>{
         setTimeout(alert(`Draw!`),200);
     }
     const activate = (e) =>{
-        //console.log(e.path[0].dataset.position);
         if(e.path[0].classList.contains(`cross`) === false && e.path[0].classList.contains(`circle`) === false)
             gameBoard.draw(pick(),e.path[0].dataset.position);
         else return;
         if(checkBoard() === 1){
             setTimeout(myAlert1,200);
             stopGame();
-            
-            //gameBoard.clean();
             logicCount = 0;
             score1++;
             SCORE1[0].textContent = `${score1}`
@@ -108,17 +103,15 @@ const play = ( ()=>{
             setTimeout(myAlert2,200);
             stopGame();
             score2++;
-            //gameBoard.clean();
             logicCount = 0;
             SCORE2[0].textContent = `${score2}`
         }
         else if(checkBoard() === `draw`){
             setTimeout(myAlert0,200);
             stopGame();
-            //gameBoard.clean();
             logicCount = 0;
         }
-        //stopInput();
+
     }
 
     const startGame = () => {
@@ -135,8 +128,6 @@ const play = ( ()=>{
     }
 
     const checkBoard = ()=>{ //for win or draw
-       // console.log( gameBoard.gamestate );
-       console.log(gameBoard.gamestate);
        for(let i = 0;i < 3 ; i++){  ///checking rows
             if      ( arrayEquals(gameBoard.gamestate.slice(i*3,3+i*3),tripleX) )
                 return 1;
